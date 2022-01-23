@@ -19,5 +19,8 @@
   "homepage": "https://github.com/StepanenkoArtem/frontend-project-lvl2#readme",
   "dependencies": {
     "commander": "^8.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.7.0"
   }
 }
