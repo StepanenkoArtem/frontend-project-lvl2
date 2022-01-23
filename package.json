@@ -1,5 +1,6 @@
 {
   "name": "@hexlet/code",
+  "type": "module",
   "version": "1.0.0",
   "description": "Hexlet Project #2 (Frontend)",
   "main": "index.js",
