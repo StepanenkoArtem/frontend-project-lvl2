@@ -1,6 +1,9 @@
 prettier-write:
 	npx prettier-eslint --write **/*.js
 
+install:
+	npm install
+
 publish:
 	npm publish --dry-run
 
