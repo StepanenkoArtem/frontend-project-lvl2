@@ -1,8 +1,7 @@
 import { test, expect } from '@jest/globals';
-import genDiff from "../src/gendiff.js";
-import path from 'path';
+import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import genDiff from '../src/gendiff.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -17,11 +16,6 @@ test('true is true', () => {
  - timeout: 50
  + timeout: 20
  + verbose: true
-}`
-  expect(
-    genDiff(
-      getFixturePath('first.json'),
-      getFixturePath('second.json'),
-      )
-  ).toBe(expected);
+}`;
+  expect(genDiff(getFixturePath('first.json'), getFixturePath('second.json'))).toBe(expected);
 });
