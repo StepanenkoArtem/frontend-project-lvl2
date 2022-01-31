@@ -5,8 +5,7 @@ import format from './formatters/formatter.js';
 
 const getContentType = (filename) => _.last(filename.split('.'));
 
-const sortByKeys = (obj) => Object
-  .keys(obj)
+const sortByKeys = (obj) => Object.keys(obj)
   .sort()
   .reduce((acc, key) => ({ ...acc, [key]: obj[key] }), {});
 
@@ -45,8 +44,5 @@ export default (beforeFilepath, afterFilepath, outputFormat = 'json') => {
   const before = parse({ content: beforeContent, type: beforeContentType });
   const after = parse({ content: afterContent, type: afterContentType });
 
-  return format(
-    makeDiff(before, after),
-    outputFormat,
-  );
+  return format(makeDiff(before, after), outputFormat);
 };

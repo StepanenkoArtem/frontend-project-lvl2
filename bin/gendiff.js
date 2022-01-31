@@ -22,6 +22,4 @@ if (help) console.log(app.help());
 if (version) console.log(app.version);
 if (_.isEmpty(app.args) && _.isEmpty(app.opts())) console.log(app.description());
 
-app
-  .parse(process.argv)
-  .action(console.log(genDiff(before, after, format)));
+app.parse(process.argv).action(console.log(genDiff(before, after, format)));
