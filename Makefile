@@ -11,6 +11,6 @@ lint:
 	npx eslint .
 
 test:
-	echo 'TEST PENDING'
+	npm run test
 
 .PHONY: test prettier-write
