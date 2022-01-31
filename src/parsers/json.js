@@ -2,7 +2,7 @@ export default (data) => {
   const { content, type } = data;
 
   switch (type) {
-    case 'json':
+    default:
       return JSON.parse(content);
   }
-}
+};

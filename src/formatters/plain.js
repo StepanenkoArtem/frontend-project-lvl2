@@ -1,1 +1,1 @@
-export default (before, after) => "";
+// export default (before, after) => '';

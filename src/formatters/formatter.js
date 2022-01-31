@@ -1,8 +1,8 @@
-import formatAsJSON from "./json.js";
+import formatAsJSON from './json.js';
 
 export default (diff, format) => {
   switch (format) {
-    case 'json':
+    default:
       return formatAsJSON(diff);
   }
-}
+};
