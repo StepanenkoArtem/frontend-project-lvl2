@@ -10,4 +10,7 @@ publish:
 lint:
 	npx eslint .
 
+test:
+	echo 'TEST PENDING'
+
 .PHONY: test prettier-write
