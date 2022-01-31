@@ -13,4 +13,7 @@ lint:
 test:
 	npm run test
 
-.PHONY: test prettier-write
+test-coverage:
+	npm test -- --coverage --coverageProvider=v8
+
+.PHONY: test
