@@ -24,4 +24,4 @@ if (_.isEmpty(app.args) && _.isEmpty(app.opts())) console.log(app.description())
 
 app
   .parse(process.argv)
-  .action(genDiff(before, after, format));
+  .action(console.log(genDiff(before, after, format)));
