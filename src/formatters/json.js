@@ -7,7 +7,7 @@ export default (diff) => {
 
   diffKeys.forEach((key) => {
     const { status } = diff[key];
-    const keyValue = `${key} : ${diff[key].value}`;
+    const keyValue = `${key}: ${diff[key].value}`;
     switch (status) {
       case 'unchanged':
         result.push(`   ${keyValue}`); break;
