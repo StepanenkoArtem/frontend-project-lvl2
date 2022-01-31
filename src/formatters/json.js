@@ -6,19 +6,20 @@ export default (diff) => {
   const diffKeys = _.keys(diff);
 
   diffKeys.forEach((key) => {
+    const status = diff[key].status;
     const keyValue = `${key} : ${diff[key].value}`
-    if (diff[key].status == 'unchanged') {
-      result.push(`   ${keyValue}`);
-    }
-    if (diff[key].status == 'added') {
-      result.push(` + ${keyValue}`);
-    }
-    if (diff[key].status == 'deleted') {
-      result.push(` - ${keyValue}`);
-    }
-    if (diff[key].status == 'changed') {
-      result.push(` - ${key}: ${diff[key].value.from}`);
-      result.push(` + ${key}: ${diff[key].value.to}`);
+    switch (status) {
+      case 'unchanged':
+        result.push(`   ${keyValue}`); break;
+      case 'added':
+        result.push(` + ${keyValue}`); break;
+      case 'deleted':
+        result.push(` - ${keyValue}`); break;
+      case 'changed': {
+          result.push(` - ${key}: ${diff[key].value.from}`);
+          result.push(` + ${key}: ${diff[key].value.to}`);
+        }
+        break;
     }
   });
   return `{\n${result.join('\n')}\n}`
