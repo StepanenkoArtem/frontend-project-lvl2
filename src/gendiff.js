@@ -1,7 +1,8 @@
 import _ from 'lodash';
-import parse from './parsers/json.js';
+import parse from './parsers.js';
 import getContent from './readers/readFile.js';
 import format from './formatters/formatter.js';
+import {DELETED, ADDED, MODIFIED} from "./constants.js";
 
 const getContentType = (filename) => _.last(filename.split('.'));
 
@@ -19,21 +20,24 @@ const makeDiff = (before, after) => {
   const addedKeys = _.difference(afterKeys, beforeKeys);
 
   deletedKeys.forEach((key) => {
-    diff[key] = { value: before[key], status: 'deleted' };
+    diff[key] = { status: DELETED, payload: before[key] };
   });
   addedKeys.forEach((key) => {
-    diff[key] = { value: after[key], status: 'added' };
+    diff[key] = { status: ADDED, payload: after[key] };
   });
   commonKeys.forEach((key) => {
-    if (after[key] === before[key]) {
-      diff[key] = { value: after[key], status: 'unchanged' };
-      return;
+    if (_.isEqual(after[key], before[key])) {
+      diff[key] = { payload: after[key] };
+    } else if (_.isObject(before[key]) && _.isObject(after[key])) {
+      diff[key] = { payload: makeDiff(before[key], after[key]) }
+    } else {
+      diff[key] = {
+        status: MODIFIED,
+        payload: { from: before[key], to: after[key] },
+      };
     }
-    diff[key] = {
-      value: { from: before[key], to: after[key] },
-      status: 'changed',
-    };
   });
+
   return sortByKeys(diff);
 };
 

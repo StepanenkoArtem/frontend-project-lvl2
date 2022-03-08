@@ -1,8 +1,8 @@
-import formatAsJSON from './json.js';
+import stylish from "./stylish.js";
 
 export default (diff, format) => {
   switch (format) {
     default:
-      return formatAsJSON(diff);
+      return stylish(diff);
   }
 };
