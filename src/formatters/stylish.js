@@ -1,4 +1,7 @@
 import _ from 'lodash';
+import {
+  DELETED, MODIFIED, ADDED,
+} from '../constants.js';
 
 export default (diff) => {
   const result = [];
@@ -9,18 +12,18 @@ export default (diff) => {
     const { status } = diff[key];
     const keyValue = `${key}: ${diff[key].value}`;
     switch (status) {
-      case 'unchanged':
-        result.push(`   ${keyValue}`); break;
-      case 'added':
+      case ADDED:
         result.push(` + ${keyValue}`); break;
-      case 'deleted':
+      case DELETED:
         result.push(` - ${keyValue}`); break;
-      case 'changed': {
+      case MODIFIED: {
         result.push(` - ${key}: ${diff[key].value.from}`);
         result.push(` + ${key}: ${diff[key].value.to}`);
         break;
       }
-      default:
+      default: {
+        result.push(`   ${keyValue}`); break;
+      }
     }
   });
   return `{\n${result.join('\n')}\n}`;
