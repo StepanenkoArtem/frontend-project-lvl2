@@ -1,30 +1,41 @@
-import _ from 'lodash';
-import {
-  DELETED, MODIFIED, ADDED,
-} from '../constants.js';
+import {ADDED, DELETED, MODIFIED} from "../constants.js";
+import _ from "lodash";
 
 export default (diff) => {
-  const result = [];
+  const iter = (node, depth = 1) => {
+    const shift = " ".repeat(depth * 2);
 
-  const diffKeys = _.keys(diff);
-
-  diffKeys.forEach((key) => {
-    const { status } = diff[key];
-    const keyValue = `${key}: ${diff[key].value}`;
-    switch (status) {
-      case ADDED:
-        result.push(` + ${keyValue}`); break;
-      case DELETED:
-        result.push(` - ${keyValue}`); break;
-      case MODIFIED: {
-        result.push(` - ${key}: ${diff[key].value.from}`);
-        result.push(` + ${key}: ${diff[key].value.to}`);
-        break;
-      }
-      default: {
-        result.push(`   ${keyValue}`); break;
+    const formatLine = (token, key, content) => {
+      if (_.isObject(content)) {
+        return `${shift}${token} ${key}: ${JSON.stringify(content, " ", 4)}`
+      } else {
+        return `${shift}${token} ${key}: ${content}`;
       }
     }
-  });
-  return `{\n${result.join('\n')}\n}`;
-};
+
+    return Object
+      .keys(node)
+      .flatMap((key) => {
+        const lines = [`{\n`];
+        const { status, before, after } = node[key];
+        if (status === DELETED) {
+          lines.push(formatLine("-", key, before));
+        }
+        if (status === ADDED) {
+          lines.push(formatLine("+", key, after));
+        }
+        if (status === MODIFIED) {
+          lines.push(formatLine("-", key, before));
+          lines.push(formatLine("+", key, after));
+        }
+        if (!status) {
+          lines.push(formatLine( " ", key, iter(node[key], depth + 1)));
+          lines.push("\n}");
+        }
+        return lines;
+      })
+      .join('')
+  }
+
+  return iter(diff);
+}
