@@ -2,13 +2,15 @@ import _ from 'lodash';
 import parse from './parsers.js';
 import getContent from './readers/readFile.js';
 import format from './formatters/formatter.js';
-import { ADDED, DELETED, MODIFIED, UNCHANGED } from "./constants.js";
+import {
+  ADDED, DELETED, MODIFIED, UNCHANGED,
+} from './constants.js';
 
 const getContentType = (filename) => _.last(filename.split('.'));
 
 const sortByKeys = (obj) => Object.keys(obj)
   .sort()
-  .reduce((acc, key) => ({...acc, [key]: obj[key] }), {});
+  .reduce((acc, key) => ({ ...acc, [key]: obj[key] }), {});
 
 const makeDiff = (before, after) => {
   const diff = {};
@@ -32,9 +34,9 @@ const makeDiff = (before, after) => {
       diff[key] = {
         status: UNCHANGED,
         before: before[key],
-      }
+      };
     } else if (_.isObject(before[key]) && _.isObject(after[key])) {
-      diff[key] = makeDiff(before[key], after[key])
+      diff[key] = makeDiff(before[key], after[key]);
     } else {
       diff[key] = {
         status: MODIFIED,
