@@ -3,12 +3,13 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import genDiff from '../src/gendiff.js';
 
-const __filename = fileURLToPath(import.meta.url);
+const __filename = fileURLToPath(
+  import.meta.url);
 const __dirname = dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-test('true is true', () => {
+test('diff is proper', () => {
   const expected = `{
     common: {
       + follow: false
@@ -53,5 +54,6 @@ test('true is true', () => {
         fee: 100500
     }
 }`;
+
   expect(genDiff(getFixturePath('before.json'), getFixturePath('after.json'))).toBe(expected);
 });
