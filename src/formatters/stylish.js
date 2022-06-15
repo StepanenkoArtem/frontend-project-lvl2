@@ -1,5 +1,4 @@
-import { ADDED, DELETED, MODIFIED, UNCHANGED } from "../constants.js";
-import _ from "lodash";
+import _ from 'lodash';
 
 // Indentation settings
 const PLACEHOLDER = ' ';
@@ -7,75 +6,53 @@ const SPACE_COUNT = 4;
 
 const shift = (depth) => PLACEHOLDER.repeat(depth * SPACE_COUNT);
 
-
 const endLine = (depth) => `${shift(depth)}}`;
 
 const formatToken = (token) => `  ${token} `;
 
-const hasStatus = (node) => (_.has(node, 'status'));
+const hasStatus = (node) => _.has(node, 'status');
 
 const formatLine = (line, depth) => {
-  const iter = (currentValue, depth) => {
+  const iter = (currentValue, innerDepth) => {
     if (!_.isObject(currentValue)) return `${currentValue}`;
 
-
-    const indentSize = (depth + 1) * SPACE_COUNT;
+    const indentSize = (innerDepth + 1) * SPACE_COUNT;
     const currentIndent = PLACEHOLDER.repeat(indentSize);
-    //const bracketIndent = PLACEHOLDER.repeat(indentSize - SPACE_COUNT);
     const lines = Object
       .entries(currentValue)
-      .map(([key, val]) => `${currentIndent}${formatToken(' ')}${key}: ${iter(val, depth + 1)}`);
+      .map(([key, val]) => `${currentIndent}${formatToken(' ')}${key}: ${iter(val, innerDepth + 1)}`);
 
-    return [
-      `{`,
-      ...lines,
-      `${currentIndent}}`,
-    ].join('\n');
+    return ['{', ...lines, `${currentIndent}}`].join('\n');
   };
-
   return iter(line, depth);
 };
 
-
-export const genView = (diff, depth = 0) => {
-  //console.log(JSON.stringify(diff, " ", 4))
-  const lines = ['{'];
-
-  const addLine = (key, node, d) => {
+const genView = (diff, depth = 0) => {
+  const addLine = (key, node) => {
     const { status, before, after } = node;
 
-    switch (status) {
-      case ADDED:
-
-        lines.push(`${shift(depth)}${formatToken('+')}${key}: ${formatLine(after, depth)}`);
-        break;
-      case DELETED:
-        lines.push(`${shift(depth)}${formatToken('-')}${key}: ${formatLine(before, depth)}`)
-        break;
-      case UNCHANGED:
-        lines.push(`${shift(depth)}${formatToken(' ')}${key}: ${formatLine(before, depth)}`)
-        break;
-      case MODIFIED:
-        lines.push(`${shift(depth)}${formatToken('-')}${key}: ${formatLine(before, depth)}`)
-        lines.push(`${shift(depth)}${formatToken('+')}${key}: ${formatLine(after, depth)}`);
-        break;
-    }
+    const line = {
+      ADDED: `${shift(depth)}${formatToken('+')}${key}: ${formatLine(after, depth)}`.trimEnd(),
+      DELETED: `${shift(depth)}${formatToken('-')}${key}: ${formatLine(before, depth)}`.trimEnd(),
+      MODIFIED: [
+        `${shift(depth)}${formatToken('-')}${key}: ${formatLine(before, depth)}`.trimEnd(),
+        `${shift(depth)}${formatToken('+')}${key}: ${formatLine(after, depth)}`.trimEnd(),
+      ],
+      UNCHANGED: `${shift(depth)}${formatToken(' ')}${key}: ${formatLine(before, depth)}`.trimEnd(),
+    };
+    return line[status];
   };
 
-  Object.keys(diff)
-    .map((key) => {
-      const currentNode = diff[key];
+  const lines = Object.keys(diff).flatMap((key) => {
+    const currentNode = diff[key];
 
-      if (hasStatus(currentNode)) {
-        addLine(key, currentNode, depth + 1)
-      } else {
-        lines.push(`${shift(depth)}${formatToken(' ')}${key}: ${genView(currentNode, depth +1)}`);
-      }
-    });
+    if (hasStatus(currentNode)) {
+      return addLine(key, currentNode);
+    }
+    return `${shift(depth)}${formatToken(' ')}${key}: ${genView(currentNode, depth + 1)}`;
+  });
 
-  lines.push(endLine(depth));
-  return lines.join('\n');
+  return ['{', ...lines, endLine(depth)].join('\n');
 };
-
 
 export default genView;

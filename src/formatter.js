@@ -1,9 +1,7 @@
-import stylish from './stylish.js';
+import stylish from './formatters/stylish.js';
 
-const formatter = (diff, format) => {
+export default (diff, format) => {
   switch (format) {
     default: return stylish(diff);
   }
 };
-
-export default formatter;
