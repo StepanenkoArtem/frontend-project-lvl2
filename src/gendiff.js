@@ -49,7 +49,7 @@ const makeDiff = (before, after) => {
   return sortByKeys(diff);
 };
 
-export default (beforeFilepath, afterFilepath, outputFormat = 'json') => {
+export default (beforeFilepath, afterFilepath, outputFormat = 'stylish') => {
   const [beforeContentType, afterContentType] = [beforeFilepath, afterFilepath].map(getContentType);
   const [beforeContent, afterContent] = [beforeFilepath, afterFilepath].map(getContent);
 
