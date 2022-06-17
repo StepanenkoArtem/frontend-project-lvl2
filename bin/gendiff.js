@@ -10,14 +10,13 @@ const app = new Command();
 app
   .description(DESCRIPTION)
   .version(VERSION)
-  .option('-f, --format', 'Output format')
+  .option('-f, --format <type>', 'Output format')
   .option('-h, --help', 'output usage information')
   .parse(process.argv)
   .arguments('<filepath1> <filepath2>');
 
 const { help, version, format } = app.opts();
 const [before, after] = app.args;
-
 if (help) console.log(app.help());
 if (version) console.log(app.version);
 if (_.isEmpty(app.args) && _.isEmpty(app.opts())) console.log(app.description());
