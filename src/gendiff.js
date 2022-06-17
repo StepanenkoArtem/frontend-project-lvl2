@@ -21,13 +21,9 @@ const makeDiff = (before, after) => {
   const deletedKeys = _.difference(beforeKeys, afterKeys);
   const addedKeys = _.difference(afterKeys, beforeKeys);
 
-  deletedKeys.forEach((key) => {
-    diff[key] = { status: DELETED, before: before[key] };
-  });
+  deletedKeys.forEach((key) => { diff[key] = { status: DELETED, before: before[key] }; });
 
-  addedKeys.forEach((key) => {
-    diff[key] = { status: ADDED, after: after[key] };
-  });
+  addedKeys.forEach((key) => { diff[key] = { status: ADDED, after: after[key] }; });
 
   commonKeys.forEach((key) => {
     if (_.isEqual(after[key], before[key])) {
