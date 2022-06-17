@@ -11,6 +11,9 @@ const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', 
 const jsonBefore = getFixturePath('before.json');
 const jsonAfter = getFixturePath('after.json');
 
+const yamlBefore = getFixturePath('before.yml');
+const yamlAfter = getFixturePath('after.yml');
+
 test('stylish formatter', () => {
   const expectedStylishDiff = `{
     common: {
@@ -58,6 +61,7 @@ test('stylish formatter', () => {
 }`;
 
   expect(genDiff(jsonBefore, jsonAfter)).toBe(expectedStylishDiff);
+  expect(genDiff(yamlBefore, yamlAfter)).toBe(expectedStylishDiff);
 });
 
 test('plain formatter', () => {
@@ -74,6 +78,7 @@ Property 'group2' was removed
 Property 'group3' was added with value: [complex value]`;
 
   expect(genDiff(jsonBefore, jsonAfter, 'plain')).toBe(expectedPlainDiff);
+  expect(genDiff(yamlBefore, yamlAfter, 'plain')).toBe(expectedPlainDiff);
 });
 
 test('json formatter', () => {
@@ -89,4 +94,5 @@ test('json formatter', () => {
 "group3":{"status":"ADDED","after":{"deep":{"id":{"number":45}},"fee":100500}}}';
 
   expect(genDiff(jsonBefore, jsonAfter, 'json')).toBe(expectedJsonDiff);
+  expect(genDiff(yamlBefore, yamlAfter, 'json')).toBe(expectedJsonDiff);
 });
