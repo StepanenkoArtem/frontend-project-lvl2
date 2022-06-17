@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import parse from './parsers.js';
 import getContent from './readers/readFile.js';
-import format from './formatter.js';
+import format from './formatters/index.js';
 import {
   ADDED, DELETED, MODIFIED, UNCHANGED,
 } from './constants.js';
