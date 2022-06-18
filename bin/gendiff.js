@@ -12,8 +12,8 @@ app
   .version(VERSION)
   .option('-f, --format <type>', 'Output format')
   .option('-h, --help', 'output usage information')
-  .arguments('<filepath1> <filepath2>')
-  .parse(process.argv);
+  .parse(process.argv)
+  .arguments('<filepath1> <filepath2>');
 
 const { help, version, format } = app.opts();
 const [before, after] = app.args;
