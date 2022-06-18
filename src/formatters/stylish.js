@@ -25,7 +25,7 @@ const formatLine = (line, depth) => {
   return iter(line, depth);
 };
 
-const template = (key, value, token, depth) => `${shift(depth)}${formatToken(token)}${key}: ${formatLine(value, depth)}`.trimEnd();
+const template = (key, value, token, depth) => `${shift(depth)}${formatToken(token)}${key}: ${formatLine(value, depth)}`;
 
 const view = (diff, depth = 0) => {
   const addLine = (key, node) => {
