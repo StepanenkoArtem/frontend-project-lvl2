@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-const hasStatus = (node) => _.has(node, 'status');
-
 const formatValue = (value) => {
   if (_.isArray(value) || _.isObject(value)) return '[complex value]';
   if (_.isBoolean(value) || _.isNull(value)) return value;
@@ -20,18 +18,18 @@ const formatLine = (path, node) => {
   return line[status];
 };
 
-const plain = (diff, path) => {
+const view = (diff, path) => {
   const lines = Object.keys(diff).map(
     (key) => {
       const currentNode = diff[key];
       const currentPath = _.compact([path, key]).join('.');
-      if (hasStatus(currentNode)) return formatLine(currentPath, currentNode);
+      if (_.has(currentNode, 'status')) return formatLine(currentPath, currentNode);
 
-      return plain(currentNode, currentPath);
+      return view(currentNode, currentPath);
     },
   );
 
   return _.compact(lines).join('\n');
 };
 
-export default plain;
+export default view;

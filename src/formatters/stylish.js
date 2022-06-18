@@ -10,8 +10,6 @@ const endLine = (depth) => `${shift(depth)}}`;
 
 const formatToken = (token) => `  ${token} `;
 
-const hasStatus = (node) => _.has(node, 'status');
-
 const formatLine = (line, depth) => {
   const iter = (currentValue, innerDepth) => {
     if (!_.isObject(currentValue)) return `${currentValue}`;
@@ -27,18 +25,17 @@ const formatLine = (line, depth) => {
   return iter(line, depth);
 };
 
-const genView = (diff, depth = 0) => {
+const template = (key, value, token, depth) => `${shift(depth)}${formatToken(token)}${key}: ${formatLine(value, depth)}`.trimEnd();
+
+const view = (diff, depth = 0) => {
   const addLine = (key, node) => {
     const { status, before, after } = node;
 
     const line = {
-      ADDED: `${shift(depth)}${formatToken('+')}${key}: ${formatLine(after, depth)}`.trimEnd(),
-      DELETED: `${shift(depth)}${formatToken('-')}${key}: ${formatLine(before, depth)}`.trimEnd(),
-      MODIFIED: [
-        `${shift(depth)}${formatToken('-')}${key}: ${formatLine(before, depth)}`.trimEnd(),
-        `${shift(depth)}${formatToken('+')}${key}: ${formatLine(after, depth)}`.trimEnd(),
-      ],
-      UNCHANGED: `${shift(depth)}${formatToken(' ')}${key}: ${formatLine(before, depth)}`.trimEnd(),
+      ADDED: template(key, after, '+', depth),
+      DELETED: template(key, before, '-', depth),
+      MODIFIED: [template(key, before, '-', depth), template(key, after, '+', depth)],
+      UNCHANGED: template(key, before, ' ', depth),
     };
     return line[status];
   };
@@ -46,13 +43,13 @@ const genView = (diff, depth = 0) => {
   const lines = Object.keys(diff).flatMap((key) => {
     const currentNode = diff[key];
 
-    if (hasStatus(currentNode)) {
+    if (_.has(currentNode, 'status')) {
       return addLine(key, currentNode);
     }
-    return `${shift(depth)}${formatToken(' ')}${key}: ${genView(currentNode, depth + 1)}`;
+    return `${shift(depth)}${formatToken(' ')}${key}: ${view(currentNode, depth + 1)}`;
   });
 
   return ['{', ...lines, endLine(depth)].join('\n');
 };
 
-export default genView;
+export default view;
