@@ -37,7 +37,7 @@ YAML:
 <script id="asciicast-Oth8TRHFITBjAdQf4quGBxSjY" src="https://asciinema.org/a/Oth8TRHFITBjAdQf4quGBxSjY.js" async></script>
 
 and JSON:
-<script id="asciicast-0ctWO0brYkeaVA9dd5HVIxqgW" src="https://asciinema.org/a/0ctWO0brYkeaVA9dd5HVIxqgW.js" async></script>
+[![asciicast](https://asciinema.org/a/0ctWO0brYkeaVA9dd5HVIxqgW.svg)](https://asciinema.org/a/0ctWO0brYkeaVA9dd5HVIxqgW)
 
 By default the difference shows like GitHub diff as you can see on examples above.
 There are two additional options you can apply to format the difference in another ways.
