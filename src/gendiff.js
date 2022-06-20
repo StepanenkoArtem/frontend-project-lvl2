@@ -8,12 +8,10 @@ import {
 
 const getContentType = (filename) => _.last(filename.split('.'));
 
-const sortByKeys = (obj) => Object.keys(obj)
-  .sort()
+const sortByKeys = (obj) => _.sortBy(Object.keys(obj))
   .reduce((acc, key) => ({ ...acc, [key]: obj[key] }), {});
 
 const makeDiff = (before, after) => {
-  const diff = {};
   const beforeKeys = Object.keys(before);
   const afterKeys = Object.keys(after);
 
@@ -21,28 +19,23 @@ const makeDiff = (before, after) => {
   const deletedKeys = _.difference(beforeKeys, afterKeys);
   const addedKeys = _.difference(afterKeys, beforeKeys);
 
-  deletedKeys.forEach((key) => { diff[key] = { status: DELETED, before: before[key] }; });
+  const deleted = deletedKeys
+    .reduce((acc, key) => ({ ...acc, [key]: { status: DELETED, before: before[key] } }), {});
 
-  addedKeys.forEach((key) => { diff[key] = { status: ADDED, after: after[key] }; });
+  const added = addedKeys
+    .reduce((acc, key) => ({ ...acc, [key]: { status: ADDED, after: after[key] } }), {});
 
-  commonKeys.forEach((key) => {
+  const common = commonKeys.reduce((acc, key) => {
     if (_.isEqual(after[key], before[key])) {
-      diff[key] = {
-        status: UNCHANGED,
-        before: before[key],
-      };
-    } else if (_.isObject(before[key]) && _.isObject(after[key])) {
-      diff[key] = makeDiff(before[key], after[key]);
-    } else {
-      diff[key] = {
-        status: MODIFIED,
-        before: before[key],
-        after: after[key],
-      };
+      return { ...acc, [key]: { status: UNCHANGED, before: before[key] } };
     }
-  });
+    if (_.isObject(before[key]) && _.isObject(after[key])) {
+      return { ...acc, [key]: makeDiff(before[key], after[key]) };
+    }
+    return { ...acc, [key]: { status: MODIFIED, before: before[key], after: after[key] } };
+  }, {});
 
-  return sortByKeys(diff);
+  return sortByKeys({ ...deleted, ...added, ...common });
 };
 
 export default (beforeFilepath, afterFilepath, outputFormat = 'stylish') => {
