@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import _ from 'lodash';
 import genDiff from '../src/gendiff.js';
 
 const VERSION = '0.0.1';
@@ -12,13 +11,16 @@ app
   .version(VERSION)
   .option('-f, --format <type>', 'Output format')
   .option('-h, --help', 'output usage information')
-  .parse(process.argv)
-  .arguments('<filepath1> <filepath2>');
-
-const { help, version, format } = app.opts();
-const [before, after] = app.args;
-if (help) console.log(app.help());
-if (version) console.log(app.version);
-if (_.isEmpty(app.args) && _.isEmpty(app.opts())) console.log(app.description());
-
-app.parse(process.argv).action(console.log(genDiff(before, after, format)));
+  .arguments('[filepath1], [filepath2]')
+  .action((filepath1, filepath2, options) => {
+    if (filepath1 && filepath2) {
+      console.log(genDiff(filepath1, filepath2, options.format));
+      return;
+    }
+    if (options.help) {
+      console.log(app.help());
+      return;
+    }
+    console.log(app.description());
+  })
+  .parse(process.argv);
