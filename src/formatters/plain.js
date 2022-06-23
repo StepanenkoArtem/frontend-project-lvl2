@@ -7,12 +7,12 @@ const formatValue = (value) => {
 };
 
 const formatLine = (path, node) => {
-  const { before, after, status } = node;
+  const { first, second, status } = node;
 
   const line = {
-    MODIFIED: `Property '${path}' was updated. From ${formatValue(before)} to ${formatValue(after)}`,
+    MODIFIED: `Property '${path}' was updated. From ${formatValue(first)} to ${formatValue(second)}`,
     DELETED: `Property '${path}' was removed`,
-    ADDED: `Property '${path}' was added with value: ${formatValue(after)}`,
+    ADDED: `Property '${path}' was added with value: ${formatValue(second)}`,
   };
 
   return line[status];

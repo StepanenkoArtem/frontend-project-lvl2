@@ -1,49 +1,36 @@
 import _ from 'lodash';
-import parse from './parsers.js';
-import getContent from './readers/readFile.js';
-import format from './formatters/index.js';
 import {
   ADDED, DELETED, MODIFIED, UNCHANGED,
 } from './constants.js';
 
-const getContentType = (filename) => _.last(filename.split('.'));
-
 const sortByKeys = (obj) => _.sortBy(Object.keys(obj))
   .reduce((acc, key) => ({ ...acc, [key]: obj[key] }), {});
 
-const makeDiff = (before, after) => {
-  const beforeKeys = Object.keys(before);
-  const afterKeys = Object.keys(after);
+const genDiff = (first, second) => {
+  const firstKeys = Object.keys(first);
+  const secondKeys = Object.keys(second);
 
-  const commonKeys = _.intersection(beforeKeys, afterKeys);
-  const deletedKeys = _.difference(beforeKeys, afterKeys);
-  const addedKeys = _.difference(afterKeys, beforeKeys);
+  const commonKeys = _.intersection(firstKeys, secondKeys);
+  const deletedKeys = _.difference(firstKeys, secondKeys);
+  const addedKeys = _.difference(secondKeys, firstKeys);
 
   const deleted = deletedKeys
-    .reduce((acc, key) => ({ ...acc, [key]: { status: DELETED, before: before[key] } }), {});
+    .reduce((acc, key) => ({ ...acc, [key]: { status: DELETED, first: first[key] } }), {});
 
   const added = addedKeys
-    .reduce((acc, key) => ({ ...acc, [key]: { status: ADDED, after: after[key] } }), {});
+    .reduce((acc, key) => ({ ...acc, [key]: { status: ADDED, second: second[key] } }), {});
 
   const common = commonKeys.reduce((acc, key) => {
-    if (_.isEqual(after[key], before[key])) {
-      return { ...acc, [key]: { status: UNCHANGED, before: before[key] } };
+    if (_.isEqual(second[key], first[key])) {
+      return { ...acc, [key]: { status: UNCHANGED, first: first[key] } };
     }
-    if (_.isObject(before[key]) && _.isObject(after[key])) {
-      return { ...acc, [key]: makeDiff(before[key], after[key]) };
+    if (_.isObject(first[key]) && _.isObject(second[key])) {
+      return { ...acc, [key]: genDiff(first[key], second[key]) };
     }
-    return { ...acc, [key]: { status: MODIFIED, before: before[key], after: after[key] } };
+    return { ...acc, [key]: { status: MODIFIED, first: first[key], second: second[key] } };
   }, {});
 
   return sortByKeys({ ...deleted, ...added, ...common });
 };
 
-export default (beforeFilepath, afterFilepath, outputFormat = 'stylish') => {
-  const [beforeContentType, afterContentType] = [beforeFilepath, afterFilepath].map(getContentType);
-  const [beforeContent, afterContent] = [beforeFilepath, afterFilepath].map(getContent);
-
-  const before = parse({ content: beforeContent, type: beforeContentType });
-  const after = parse({ content: afterContent, type: afterContentType });
-
-  return format(makeDiff(before, after), outputFormat);
-};
+export default genDiff;

@@ -29,13 +29,13 @@ const template = (key, value, token, depth) => `${shift(depth)}${formatToken(tok
 
 const view = (diff, depth = 0) => {
   const addLine = (key, node) => {
-    const { status, before, after } = node;
+    const { status, first, second } = node;
 
     const line = {
-      ADDED: template(key, after, '+', depth),
-      DELETED: template(key, before, '-', depth),
-      MODIFIED: [template(key, before, '-', depth), template(key, after, '+', depth)],
-      UNCHANGED: template(key, before, ' ', depth),
+      ADDED: template(key, second, '+', depth),
+      DELETED: template(key, first, '-', depth),
+      MODIFIED: [template(key, first, '-', depth), template(key, second, '+', depth)],
+      UNCHANGED: template(key, first, ' ', depth),
     };
     return line[status];
   };
