@@ -9,7 +9,7 @@ const app = new Command();
 app
   .description(DESCRIPTION)
   .version(VERSION)
-  .option('-f, --format <type>', 'Output format')
+  .option('-f, --format <type>', 'Output format', 'stylish')
   .option('-h, --help', 'output usage information')
   .arguments('[filepath1], [filepath2]')
   .action((filepath1, filepath2, options) => {
