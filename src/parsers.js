@@ -9,6 +9,6 @@ export default ({ type, content }) => {
       return yaml.load(content);
     default:
       console.error('Unsupported file format');
-      process.exit(1);
   }
+  return process.exit(1);
 };
