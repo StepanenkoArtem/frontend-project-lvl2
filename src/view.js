@@ -6,7 +6,7 @@ import getContent from './readers/readFile.js';
 
 const getContentType = (filename) => _.last(filename.split('.'));
 
-export default (beforeFilepath, afterFilepath, outputFormat = 'stylish') => {
+export default (beforeFilepath, afterFilepath, outputFormat) => {
   const [beforeContentType, afterContentType] = [beforeFilepath, afterFilepath].map(getContentType);
   const [beforeContent, afterContent] = [beforeFilepath, afterFilepath].map(getContent);
 
