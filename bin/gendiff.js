@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import genDiff from '../src/gendiff.js';
+import view from '../src/view.js';
 
 const VERSION = '0.0.1';
 const DESCRIPTION = 'Compares two configuration files and shows a difference.';
@@ -14,7 +14,7 @@ app
   .arguments('[filepath1], [filepath2]')
   .action((filepath1, filepath2, options) => {
     if (filepath1 && filepath2) {
-      console.log(genDiff(filepath1, filepath2, options.format));
+      console.log(view(filepath1, filepath2, options.format));
       return;
     }
     if (options.help) {
