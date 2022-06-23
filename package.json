@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "description": "Hexlet Project #2 (Frontend)",
-  "main": "src/gendiff.js",
+  "main": "src/view.js",
   "bin": {
     "gendiff": "bin/gendiff.js"
   },
