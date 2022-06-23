@@ -2,7 +2,7 @@ import * as path from 'path';
 import { readFileSync } from 'fs';
 
 export default (filepath) => {
-  const normalized = path.isAbsolute(filepath) ? filepath : path.join(process.cwd(), filepath);
+  const normalized = path.resolve(process.cwd(), filepath);
   try {
     return readFileSync(normalized);
   } catch (e) {
