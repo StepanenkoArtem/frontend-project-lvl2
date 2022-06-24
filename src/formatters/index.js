@@ -11,8 +11,7 @@ export default (diff, format = 'stylish') => {
     case 'stylish':
       return stylish(diff);
     default: {
-      console.error(`Wrong -f --format option ('${format}')`);
-      return process.exit(1);
+      throw new Error(`Wrong -f --format option ('${format}')`);
     }
   }
 };

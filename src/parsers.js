@@ -8,7 +8,6 @@ export default ({ type, content }) => {
     case 'yml':
       return yaml.load(content);
     default:
-      console.error('Unsupported file format');
+      throw new Error('Unsupported file format');
   }
-  return process.exit(1);
 };
