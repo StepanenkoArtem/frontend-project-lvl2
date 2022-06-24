@@ -11,7 +11,7 @@ export default (diff, format = 'stylish') => {
     case 'stylish':
       return stylish(diff);
     default: {
-      throw new Error(`Wrong -f --format option ('${format}')`);
+      throw new Error(`Unknown output format ('${format}')`);
     }
   }
 };

@@ -5,7 +5,7 @@ const formatValueToString = (value) => {
     return '[complex value]';
   }
   if (_.isBoolean(value) || _.isNull(value) || _.isNumber(value)) {
-    return `${value}`;
+    return String(value);
   }
   return `'${value}'`;
 };
