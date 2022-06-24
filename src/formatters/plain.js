@@ -5,9 +5,8 @@ const formatValueToString = (value) => {
     return '[complex value]';
   }
   if (_.isBoolean(value) || _.isNull(value) || _.isNumber(value)) {
-    return value;
+    return `${value}`;
   }
-
   return `'${value}'`;
 };
 
@@ -24,18 +23,20 @@ const addLine = (path, node) => {
   return line[status];
 };
 
-const view = (diff, path) => {
+const renderPlain = (diff, path) => {
   const lines = Object.keys(diff).map(
     (key) => {
       const currentNode = diff[key];
       const currentPath = _.compact([path, key]).join('.');
-      if (_.has(currentNode, 'status')) return addLine(currentPath, currentNode);
+      if (_.has(currentNode, 'status')) {
+        return addLine(currentPath, currentNode);
+      }
 
-      return view(currentNode, currentPath);
+      return renderPlain(currentNode, currentPath);
     },
   );
 
   return _.compact(lines).join('\n');
 };
 
-export default view;
+export default renderPlain;
