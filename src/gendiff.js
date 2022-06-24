@@ -1,36 +1,17 @@
 import _ from 'lodash';
-import {
-  ADDED, DELETED, MODIFIED, UNCHANGED,
-} from './constants.js';
+import difftree from './difftree.js';
+import parse from './parsers.js';
+import format from './formatters/index.js';
+import getContent from './readers/readFile.js';
 
-const sortByKeys = (obj) => _.sortBy(Object.keys(obj))
-  .reduce((acc, key) => ({ ...acc, [key]: obj[key] }), {});
+const getContentType = (filename) => _.last(filename.split('.'));
 
-const genDiff = (first, second) => {
-  const firstKeys = Object.keys(first);
-  const secondKeys = Object.keys(second);
+export default (beforeFilepath, afterFilepath, outputFormat) => {
+  const [beforeContentType, afterContentType] = [beforeFilepath, afterFilepath].map(getContentType);
+  const [beforeContent, afterContent] = [beforeFilepath, afterFilepath].map(getContent);
 
-  const commonKeys = _.intersection(firstKeys, secondKeys);
-  const deletedKeys = _.difference(firstKeys, secondKeys);
-  const addedKeys = _.difference(secondKeys, firstKeys);
+  const before = parse({ content: beforeContent, type: beforeContentType });
+  const after = parse({ content: afterContent, type: afterContentType });
 
-  const deleted = deletedKeys
-    .reduce((acc, key) => ({ ...acc, [key]: { status: DELETED, first: first[key] } }), {});
-
-  const added = addedKeys
-    .reduce((acc, key) => ({ ...acc, [key]: { status: ADDED, second: second[key] } }), {});
-
-  const common = commonKeys.reduce((acc, key) => {
-    if (_.isEqual(second[key], first[key])) {
-      return { ...acc, [key]: { status: UNCHANGED, first: first[key] } };
-    }
-    if (_.isObject(first[key]) && _.isObject(second[key])) {
-      return { ...acc, [key]: genDiff(first[key], second[key]) };
-    }
-    return { ...acc, [key]: { status: MODIFIED, first: first[key], second: second[key] } };
-  }, {});
-
-  return sortByKeys({ ...deleted, ...added, ...common });
+  return format(difftree(before, after), outputFormat);
 };
-
-export default genDiff;

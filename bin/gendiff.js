@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import view from '../src/view.js';
+import view from '../src/gendiff.js';
 
 const VERSION = '0.0.1';
 const DESCRIPTION = 'Compares two configuration files and shows a difference.';
