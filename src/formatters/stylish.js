@@ -27,7 +27,7 @@ const formatLine = (line, depth) => {
 
 const template = (key, value, token, depth) => `${shift(depth)}${formatToken(token)}${key}: ${formatLine(value, depth)}`;
 
-const view = (diff, depth = 0) => {
+const renderStylish = (diff, depth = 0) => {
   const addLine = (key, node) => {
     const { status, first, second } = node;
 
@@ -46,10 +46,10 @@ const view = (diff, depth = 0) => {
     if (_.has(currentNode, 'status')) {
       return addLine(key, currentNode);
     }
-    return `${shift(depth)}${formatToken(' ')}${key}: ${view(currentNode, depth + 1)}`;
+    return `${shift(depth)}${formatToken(' ')}${key}: ${renderStylish(currentNode, depth + 1)}`;
   });
 
   return ['{', ...lines, endLine(depth)].join('\n');
 };
 
-export default view;
+export default renderStylish;
