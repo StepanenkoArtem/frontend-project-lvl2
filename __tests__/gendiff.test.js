@@ -16,22 +16,22 @@ const yamlBefore = getFixturePath('before.yml');
 const yamlAfter = getFixturePath('after.yml');
 
 test('stylish formatter', () => {
-  const expectedStylishDiff = readFileSync(getFixturePath('expected/stylish'), 'utf8');
+  const expectedStylishDiff = readFileSync(getFixturePath('expected/stylish.txt'), 'utf8');
 
   expect(view(jsonBefore, jsonAfter)).toBe(expectedStylishDiff);
   expect(view(yamlBefore, yamlAfter)).toBe(expectedStylishDiff);
 });
 
 test('plain formatter', () => {
-  const expectedPlainDiff = readFileSync(getFixturePath('expected/plain'), 'utf8');
+  const expectedPlainDiff = readFileSync(getFixturePath('expected/plain.txt'), 'utf8');
 
   expect(view(jsonBefore, jsonAfter, 'plain')).toBe(expectedPlainDiff);
   expect(view(yamlBefore, yamlAfter, 'plain')).toBe(expectedPlainDiff);
 });
 
-test('json formatter', () => {
+test('json.txt formatter', () => {
   /* eslint-disable no-multi-str */
-  const expectedJsonDiff = readFileSync(getFixturePath('expected/json'), 'utf8');
+  const expectedJsonDiff = readFileSync(getFixturePath('expected/json.txt'), 'utf8');
 
   expect(view(jsonBefore, jsonAfter, 'json')).toBe(expectedJsonDiff);
   expect(view(yamlBefore, yamlAfter, 'json')).toBe(expectedJsonDiff);
