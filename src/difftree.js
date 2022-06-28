@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {
-  ADDED, DELETED, MODIFIED, UNCHANGED,
+  ADDED, DELETED, MODIFIED, UNCHANGED, TREE,
 } from './constants.js';
 
 const sortByKeys = (obj) => _.sortBy(Object.keys(obj))
@@ -24,8 +24,8 @@ const difftree = (first, second) => {
     if (_.isEqual(second[key], first[key])) {
       return { ...acc, [key]: { status: UNCHANGED, first: first[key] } };
     }
-    if (_.isObject(first[key]) && _.isObject(second[key])) {
-      return { ...acc, [key]: difftree(first[key], second[key]) };
+    if (_.isPlainObject(first[key]) && _.isPlainObject(second[key])) {
+      return { ...acc, [key]: { status: TREE, tree: difftree(first[key], second[key]) } };
     }
     return { ...acc, [key]: { status: MODIFIED, first: first[key], second: second[key] } };
   }, {});
