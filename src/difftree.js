@@ -24,7 +24,7 @@ const difftree = (first, second) => {
     if (_.isEqual(second[key], first[key])) {
       return { ...acc, [key]: { status: UNCHANGED, first: first[key] } };
     }
-    if (_.isObject(first[key]) && _.isObject(second[key])) {
+    if (_.isPlainObject(first[key]) && _.isPlainObject(second[key])) {
       return { ...acc, [key]: difftree(first[key], second[key]) };
     }
     return { ...acc, [key]: { status: MODIFIED, first: first[key], second: second[key] } };
