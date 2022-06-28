@@ -6,12 +6,16 @@ import getContent from './readers/readFile.js';
 
 const getContentType = (filename) => _.last(filename.split('.'));
 
-export default (beforeFilepath, afterFilepath, outputFormat) => {
-  const [beforeContentType, afterContentType] = [beforeFilepath, afterFilepath].map(getContentType);
-  const [beforeContent, afterContent] = [beforeFilepath, afterFilepath].map(getContent);
+export default (firstFilepath, secondFilepath, outputFormat) => {
+  const first = parse(
+    getContent(firstFilepath),
+    getContentType(firstFilepath),
+  );
 
-  const before = parse({ content: beforeContent, type: beforeContentType });
-  const after = parse({ content: afterContent, type: afterContentType });
+  const second = parse(
+    getContent(secondFilepath),
+    getContentType(secondFilepath),
+  );
 
-  return format(difftree(before, after), outputFormat);
+  return format(difftree(first, second), outputFormat);
 };
