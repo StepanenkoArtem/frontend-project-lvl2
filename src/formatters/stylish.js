@@ -43,10 +43,10 @@ const renderStylish = (diff, depth = 0) => {
   const lines = Object.keys(diff).flatMap((key) => {
     const currentNode = diff[key];
 
-    if (_.has(currentNode, 'status')) {
+    if (currentNode.status !== 'TREE') {
       return addLine(key, currentNode);
     }
-    return `${shift(depth)}${formatToken(' ')}${key}: ${renderStylish(currentNode, depth + 1)}`;
+    return `${shift(depth)}${formatToken(' ')}${key}: ${renderStylish(currentNode.tree, depth + 1)}`;
   });
 
   return ['{', ...lines, endLine(depth)].join('\n');

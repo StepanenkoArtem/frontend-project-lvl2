@@ -28,11 +28,11 @@ const renderPlain = (diff, path) => {
     (key) => {
       const currentNode = diff[key];
       const currentPath = _.compact([path, key]).join('.');
-      if (_.has(currentNode, 'status')) {
+      if (currentNode.status !== 'TREE') {
         return addLine(currentPath, currentNode);
       }
 
-      return renderPlain(currentNode, currentPath);
+      return renderPlain(currentNode.tree, currentPath);
     },
   );
 
